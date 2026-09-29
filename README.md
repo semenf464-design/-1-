@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <math.h> // Для функций pow(), sqrt(), fabs()
+
+int main() {
+    double a, b;
+
+    // Ввод двух чисел
+    printf("Введите два числа через пробел: ");
+    scanf("%lf %lf", &a, &b);
+
+    // 1. Среднее арифметическое кубов этих чисел
+    // Формула: (a^3 + b^3) / 2
+    double arith_mean_cubes = (pow(a, 3) + pow(b, 3)) / 2.0;
+
+    // 2. Среднее геометрическое модулей этих чисел
+    // Формула: sqrt(|a| * |b|)
+    // Используем fabs() для получения модуля числа
+    double geom_mean_abs = sqrt(fabs(a) * fabs(b));
+
+    // Вывод результатов
+    printf("\nРезультаты:\n");
+    printf("Среднее арифметическое кубов: %.4f\n", arith_mean_cubes);
+    printf("Среднее геометрическое модулей: %.4f\n", geom_mean_abs);
+
+    return 0;
+}
