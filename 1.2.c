@@ -2,6 +2,12 @@
 #include <math.h>
 
 /**
+* @brief проверяет корретность ввода
+* @return корректное полученное значение
+*/
+double GetValidValue();
+
+/**
  * @brief Вычисляет среднее арифметическое кубов двух чисел.
  *
  * Формула: (a^3 + b^3) / 2.
@@ -10,7 +16,7 @@
  * @param b Второе число.
  * @return Среднее арифметическое кубов чисел a и b.
  */
-double arith_mean_cubes(double a, double b) {
+double arith_mean_cubes(const double a, const double b) {
     return (pow(a, 3) + pow(b, 3)) / 2.0;
 }
 
@@ -23,7 +29,7 @@ double arith_mean_cubes(double a, double b) {
  * @param b Второе число.
  * @return Среднее геометрическое модулей чисел a и b.
  */
-double geom_mean_abs(double a, double b) {
+double geom_mean_abs(const double a, const double b) {
     return sqrt(fabs(a) * fabs(b));
 }
 
@@ -36,12 +42,17 @@ double geom_mean_abs(double a, double b) {
  * @return 0 при успешном завершении.
  */
 int main() {
-    double a, b;
-    printf("Введите два числа через пробел: ");
-    scanf("%lf %lf", &a, &b);
+    double a = 0.0, b = 0.0;
 
-    printf("\nРезультаты:\n");
-    printf("Среднее арифметическое кубов: %.4f\n", arith_mean_cubes(a, b));
-    printf("Среднее геометрическое модулей: %.4f\n", geom_mean_abs(a, b));
+    printf("Введите два числа: ");
+    if (scanf("%lf %lf", &a, &b) != 2) {
+        fprintf(stderr, "Ошибка: нужно ввести два числа.\n");
+        return 1;
+    }
+
+    printf("Среднее арифметическое кубов: %.6f\n", mean_of_cubes(a, b));
+    printf("Среднее геометрическое модулей: %.6f\n",
+           geometric_mean_of_abs(a, b));
+
     return 0;
 }
