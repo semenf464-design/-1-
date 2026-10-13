@@ -16,10 +16,7 @@ double GetValidValue();
  * @param b Второе число.
  * @return Среднее арифметическое кубов чисел a и b.
  */
-double arith_mean_cubes(const double a, const double b) {
-    return (pow(a, 3) + pow(b, 3)) / 2.0;
-}
-
+double arith_mean_cubes(const double a, const double b); 
 /**
  * @brief Вычисляет среднее геометрическое модулей двух чисел.
  *
@@ -29,9 +26,7 @@ double arith_mean_cubes(const double a, const double b) {
  * @param b Второе число.
  * @return Среднее геометрическое модулей чисел a и b.
  */
-double geom_mean_abs(const double a, const double b) {
-    return sqrt(fabs(a) * fabs(b));
-}
+double geom_mean_abs(const double a, const double b);
 
 /**
  * @brief Точка входа в программу.
@@ -50,9 +45,19 @@ int main() {
         return 1;
     }
 
-    printf("Среднее арифметическое кубов: %.6f\n", mean_of_cubes(a, b));
-    printf("Среднее геометрическое модулей: %.6f\n",
-           geometric_mean_of_abs(a, b));
+
+    printf("Среднее арифметическое кубов: %.6f\n", arith_mean_cubes(a, b));
+    printf("Среднее геометрическое модулей: %.6f\n", geom_mean_abs(a, b));
 
     return 0;
 }
+
+double arith_mean_cubes(const double a, const double b) 
+    {
+    return (pow(a, 3) + pow(b, 3)) / 2.0;
+    }
+
+    double geom_mean_abs(const double a, const double b) 
+    {
+    return sqrt(fabs(a) * fabs(b));
+    }
