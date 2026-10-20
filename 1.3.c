@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /** Число миллиметров в одном метре (для перевода x в метры). */
 #define MM_IN_METER 1000.0
@@ -25,7 +26,7 @@ double spring_energy(const double k, const double x_mm);
  *
  * @param prompt Приглашение к вводу.
  * @param name Название величины для сообщения об ошибке.
- * @param value Указатель на переменную для результата.
+ * @param value Адрес ячейки памяти (переменной) для результата.
  * @return true, если число считано успешно, иначе false.
  */
 bool read_double(const char *prompt, const char *name, double *value);
@@ -33,20 +34,22 @@ bool read_double(const char *prompt, const char *name, double *value);
 /**
  * @brief Проверяет корректность растяжения пружины.
  *
+ * Если растяжение отрицательно, выводит сообщение об ошибке в stderr
+ * и сразу завершает программу с кодом 1.
+ *
  * @param x_mm Растяжение пружины, мм.
- * @return true, если растяжение неотрицательно, иначе false
- *         (при этом выводится сообщение об ошибке).
  */
-bool is_valid_stretch(const double x_mm);
+void check_stretch(const double x_mm);
 
 /**
  * @brief Проверяет корректность коэффициента жёсткости.
  *
+ * Если жёсткость не положительна, выводит сообщение об ошибке в stderr
+ * и сразу завершает программу с кодом 1.
+ *
  * @param k Коэффициент жёсткости, Н/м.
- * @return true, если жёсткость положительна, иначе false
- *         (при этом выводится сообщение об ошибке).
  */
-bool is_valid_stiffness(const double k);
+void check_stiffness(const double k);
 
 /**
  * @brief Точка входа в программу.
@@ -54,7 +57,7 @@ bool is_valid_stiffness(const double k);
  * Считывает растяжение пружины в миллиметрах и коэффициент жёсткости
  * в Н/м, вычисляет потенциальную энергию и выводит результат.
  *
- * @return 0 при успешном завершении, 1 при ошибке ввода.
+ * @return 0 при успешном завершении, 1 при ошибке ввода или некорректных данных.
  */
 int main() {
     double x_mm = 0.0; /* растяжение пружины, мм */
@@ -68,10 +71,10 @@ int main() {
         return 1;
     }
 
-    /* Проверка физического смысла введённых значений */
-    if (!is_valid_stretch(x_mm) || !is_valid_stiffness(k)) {
-        return 1;
-    }
+    /* Проверка физического смысла введённых значений
+       (при ошибке программа завершается внутри функций) */
+    check_stretch(x_mm);
+    check_stiffness(k);
 
     /* Расчёт и вывод результата */
     printf("Потенциальная энергия пружины: %.6f Дж\n", spring_energy(k, x_mm));
@@ -92,18 +95,16 @@ bool read_double(const char *prompt, const char *name, double *value) {
     return true;
 }
 
-bool is_valid_stretch(const double x_mm) {
+void check_stretch(const double x_mm) {
     if (x_mm < 0.0) {
         fprintf(stderr, "Ошибка: растяжение не может быть отрицательным.\n");
-        return false;
+        exit(1);
     }
-    return true;
 }
 
-bool is_valid_stiffness(const double k) {
+void check_stiffness(const double k) {
     if (k <= 0.0) {
         fprintf(stderr, "Ошибка: жёсткость должна быть положительной.\n");
-        return false;
+        exit(1);
     }
-    return true;
 }
