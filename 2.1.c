@@ -80,9 +80,9 @@ double volume(const double a);
  */
 int main() {
     printf("Выберите формулу:\n");
-    printf("1 - площадь грани\n");
-    printf("2 - площадь полной поверхности\n");
-    printf("3 - объём\n");
+    printf("%d - площадь грани\n", FACE_AREA);
+    printf("%d - площадь полной поверхности\n", SURFACE_AREA);
+    printf("%d - объём\n", VOLUME);
     printf("Ваш выбор: ");
     const Formula formula = GetFormula();
 
