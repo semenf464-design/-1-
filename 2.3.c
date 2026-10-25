@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <math.h>
 
 /**
- * @brief Запрашивает у пользователя корректное вещественное число.
+ * @brief Запрашивает у пользователя вещественное число.
  *
- * Повторяет ввод, пока не будет введено конечное число.
+ * Если введено не число, выводит сообщение об ошибке и завершает программу.
  *
  * @return Корректное введённое значение.
  */
@@ -45,29 +44,15 @@ int main() {
 }
 
 double GetValidValue() {
-    char buffer[256];
+    double value = 0.0;
 
-    while (1) {
-        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
-            fprintf(stderr, "Ошибка: ввод прерван.\n");
-            exit(1);
-        }
-
-        char *end = NULL;
-        const double value = strtod(buffer, &end);
-
-        if (end != buffer) {
-            while (isspace((unsigned char)*end)) {
-                end++;
-            }
-
-            if (*end == '\0' && isfinite(value)) {
-                return value;
-            }
-        }
-
-        printf("Ошибка: нужно ввести число. Повторите ввод: ");
+    /* scanf возвращает количество успешно считанных значений */
+    if (scanf("%lf", &value) != 1) {
+        printf("Ошибка: нужно ввести число.\n");
+        exit(1);
     }
+
+    return value;
 }
 
 double calc_y(const double a, const double x) {
