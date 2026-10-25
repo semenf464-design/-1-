@@ -1,16 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <math.h>
 
+/** Вычисляемая формула. */
+typedef enum {
+    FACE_AREA = 1,    /**< площадь грани */
+    SURFACE_AREA = 2, /**< площадь полной поверхности */
+    VOLUME = 3        /**< объём */
+} Formula;
+
 /**
- * @brief Запрашивает у пользователя корректную длину ребра куба.
+ * @brief Запрашивает у пользователя номер формулы.
  *
- * Повторяет ввод, пока не будет введено конечное положительное число.
+ * Если введено не число, выводит сообщение об ошибке и завершает программу.
+ *
+ * @return Выбранная формула.
+ */
+Formula GetFormula();
+
+/**
+ * @brief Запрашивает у пользователя длину ребра куба.
+ *
+ * Если введено не число или число не положительно,
+ * выводит сообщение об ошибке и завершает программу.
  *
  * @return Корректное введённое значение (длина ребра > 0).
  */
 double GetValidValue();
+
+/**
+ * @brief Вычисляет значение выбранной формулы.
+ *
+ * Если формула не существует, выводит сообщение об ошибке
+ * и завершает программу.
+ *
+ * @param formula Выбранная формула.
+ * @param a Длина ребра куба.
+ * @return Результат вычисления выбранной формулы.
+ */
+double calculate(const Formula formula, const double a);
 
 /**
  * @brief Вычисляет площадь грани куба.
@@ -45,56 +73,77 @@ double volume(const double a);
 /**
  * @brief Точка входа в программу.
  *
- * Считывает длину ребра куба, вычисляет площадь грани,
- * площадь полной поверхности и объём, выводит результаты.
+ * Считывает номер формулы и длину ребра куба, вычисляет выбранную
+ * величину и выводит результат.
  *
  * @return 0 при успешном завершении.
  */
 int main() {
+    printf("Выберите формулу:\n");
+    printf("1 - площадь грани\n");
+    printf("2 - площадь полной поверхности\n");
+    printf("3 - объём\n");
+    printf("Ваш выбор: ");
+    const Formula formula = GetFormula();
+
     printf("Введите длину ребра куба: ");
     const double a = GetValidValue();
 
-    printf("Площадь грани: %.6f\n", face_area(a));
-    printf("Площадь полной поверхности: %.6f\n", surface_area(a));
-    printf("Объём: %.6f\n", volume(a));
+    printf("Результат: %.6f\n", calculate(formula, a));
 
     return 0;
 }
 
+Formula GetFormula() {
+    int choice = 0;
+
+    /* scanf возвращает количество успешно считанных значений */
+    if (scanf("%d", &choice) != 1) {
+        printf("Ошибка: нужно ввести номер формулы.\n");
+        exit(1);
+    }
+
+    return (Formula)choice;
+}
+
 double GetValidValue() {
-    char buffer[256];
+    double value = 0.0;
 
-    while (1) {
-        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
-            fprintf(stderr, "Ошибка: ввод прерван.\n");
+    if (scanf("%lf", &value) != 1) {
+        printf("Ошибка: нужно ввести число.\n");
+        exit(1);
+    }
+
+    if (value <= 0.0) {
+        printf("Ошибка: длина ребра должна быть положительной.\n");
+        exit(1);
+    }
+
+    return value;
+}
+
+double calculate(const Formula formula, const double a) {
+    switch (formula) {
+        case FACE_AREA:
+            return face_area(a);
+        case SURFACE_AREA:
+            return surface_area(a);
+        case VOLUME:
+            return volume(a);
+        default:
+            printf("Ошибка: такой формулы нет.\n");
             exit(1);
-        }
-
-        char *end = NULL;
-        const double value = strtod(buffer, &end);
-
-        if (end != buffer) {
-            while (isspace((unsigned char)*end)) {
-                end++;
-            }
-
-            if (*end == '\0' && isfinite(value) && value > 0.0) {
-                return value;
-            }
-        }
-
-        printf("Ошибка: нужно ввести положительное число. Повторите ввод: ");
     }
 }
 
 double face_area(const double a) {
-    return a * a;
+    return pow(a, 2);
 }
 
 double surface_area(const double a) {
-    return 6.0 * face_area(a);
+    return 6.0 * pow(a, 2);
 }
 
 double volume(const double a) {
-    return a * a * a;
+    return pow(a, 3);
 }
