@@ -55,18 +55,10 @@ int main() {
 double GetValidValue() {
     double value = 0.0;
 
-    while (scanf("%lf", &value) != 1) {
-        if (feof(stdin)) {
-            fprintf(stderr, "Ошибка: ввод прерван.\n");
-            exit(1);
-        }
-
-        /* очищаем буфер от некорректных символов */
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) {
-        }
-
-        printf("Ошибка: нужно ввести число. Повторите ввод: ");
+    /* scanf возвращает количество успешно считанных значений */
+    if (scanf("%lf", &value) != 1) {
+        printf("Ошибка: нужно ввести число.\n");
+        exit(1);
     }
 
     return value;
